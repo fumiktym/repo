@@ -11,17 +11,17 @@ import java.util.regex.Pattern;
 
 import money.CsvReader;
 
-public class GoldPointCardReader extends CsvReader {
+public class JcbCardReader extends CsvReader {
 	
 	private int balamt = 0;
 	
-	static final private Pattern filePat = Pattern.compile("20[0-9][0-9](01|02|03|04|05|06|07|08|09|10|11|12)[.]csv");
-	static public boolean isGoldPointCard(String file){
+	static final private Pattern filePat = Pattern.compile("[jJ][cC][bB]20[0-9][0-9](01|02|03|04|05|06|07|08|09|10|11|12)[.]csv");
+	static public boolean isJcbCard(String file){
 		Matcher m = filePat.matcher(file);
 		return m.matches();
 	}
 	
-	public GoldPointCardReader(String path) {
+	public JcbCardReader(String path) {
 		
 		try {
 			FileInputStream is = new FileInputStream(path);
@@ -30,7 +30,6 @@ public class GoldPointCardReader extends CsvReader {
 			int lineno = 0;
 			while((line = rdr.readLine()) != null) {
 				lineno++;
-				if(lineno < 2) continue; // Å‰‚Ìs‚Íƒ^ƒCƒgƒ‹‚È‚Ì‚Å–³‹
 				line = removeComma(line);
 				String[] field = line.split("[,]");
 				readField(field, line);
@@ -51,9 +50,8 @@ public class GoldPointCardReader extends CsvReader {
 	}
 	
 	private void readField(String[] field, String line){
-		if(field.length < 6){
-			if(field.length != 3)
-				System.err.println("field ”‚ª‚½‚è‚È‚¢ - "+line);
+		if(field.length < 4){
+			System.err.println("field ”‚ª‚½‚è‚È‚¢ - "+line);
 			return;
 		}
 		String type = "OTHER";
@@ -61,9 +59,11 @@ public class GoldPointCardReader extends CsvReader {
 		String name = getCsvString(field[1]);
 		if(name.length() == 0) return;
 		String dt = convertDT(getCsvString(field[0]));
-		String memo = "";//getCsvString(field[2])+getCsvString(field[3])+getCsvString(field[4])+getCsvString(field[5]);
+		String memo = getCsvString(field[2]);
 		int amt = 0;
-		String field6 = getCsvString(field[5]);
+		String field6 = getCsvString(field[3]);
+		if(field6.endsWith("‰~"))
+			field6 = field6.substring(0,field6.length()-1);
 		if(field6.length() > 0){
 			try {
 				amt = -Integer.parseInt(field6);
@@ -117,7 +117,7 @@ public class GoldPointCardReader extends CsvReader {
 
 	@Override
 	public String getORG() {
-		return "ƒˆƒhƒoƒV@@ƒS[ƒ‹ƒhƒ|ƒCƒ“ƒgƒJ[ƒh";
+		return "‚i‚b‚a@@‚n‚c‚`‚j‚x‚t@‚b‚`‚q‚c";
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class GoldPointCardReader extends CsvReader {
 
 	@Override
 	public String getACCTID() {
-		return "4980018719962837";
+		return "XXXXXXXXXXXXXXX1089";
 	}
 
 	@Override

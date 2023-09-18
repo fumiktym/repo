@@ -9,6 +9,7 @@ import java.util.Date;
 
 import money.type.AeonCardReader;
 import money.type.GoldPointCardReader;
+import money.type.JcbCardReader;
 import money.type.UfjReader;
 import money.type.ViewCardReader;
 
@@ -53,6 +54,8 @@ public class OfxConverter {
 					type = "aeon";
 				} else if(type.length() == 0 && ViewCardReader.isViewCard(file)){
 					type = "view";
+				} else if(type.length() == 0 && JcbCardReader.isJcbCard(file)){
+					type = "jcb";
 				}
 				if(type.length() == 0) continue;
 				System.out.println("Process ("+type+") - "+iPath+"/"+file);
@@ -75,7 +78,9 @@ public class OfxConverter {
 		
 		} else if(type.equals("view")){
 			rdr = new ViewCardReader(iPath);
-		
+		} else if(type.equals("jcb")){
+			rdr = new JcbCardReader(iPath);
+				
 		} else {
 			System.err.println("CSV Reader Type Ç™ïsê≥ - "+type);
 			return;

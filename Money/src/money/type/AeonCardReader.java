@@ -31,7 +31,11 @@ public class AeonCardReader extends CsvReader {
 			int lineno = 0;
 			while((line = rdr.readLine()) != null) {
 				lineno++;
-				if(lineno < 9) continue; // 最初の行はタイトルなので無視
+				if(lineno < 9) {
+					if(line.equals("分割・ボーナス払い明細")) break;
+					continue; // 最初の行はタイトルなので無視
+				}
+				if(line.startsWith("分割・ボーナス払い明細")) break;
 				if(line.startsWith("分割ご請求"))
 					break;
 				line = removeComma(line);
@@ -60,13 +64,17 @@ public class AeonCardReader extends CsvReader {
 		}
 		String type = "OTHER";
 		String id = "0";
-		String dt = convertDT(getCsvString(field[0]));
+		
+		String org = getCsvString(field[0]);
+		if(org.equals("ご利用日")) return;
+		
+		String dt = convertDT(org);
 		String lastField = "";
 		if(field.length == 6) lastField = " "+getCsvString(field[5]);
 		String memo = getCsvString(field[1])+" "+getCsvString(field[3])+lastField;
 		String name = getCsvString(field[2]);
 		int amt = 0;
-		String field6 = getCsvString(field[4]);
+		String field6 = getCsvString(field[6]);
 		if(field6.length() > 0 ){
 			field6 = field6.substring(0,field6.length()); //　語末の'円'をとる
 			field6 = field6.replaceAll("、", ""); // 数字中の '、'をとる
@@ -85,6 +93,8 @@ public class AeonCardReader extends CsvReader {
 	}
 	private String convertDT(String org) {
 		String numf[] = new String[3];
+		if(org.length() == 6)
+			org = "20" + org;
 		numf[0] = org.substring(0, 4);
 		numf[1] = org.substring(4, 6);
 		numf[2] = org.substring(6, 8);
