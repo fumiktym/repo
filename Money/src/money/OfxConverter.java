@@ -23,7 +23,8 @@ public class OfxConverter {
 			};
 		}
 		if(arg.length != 3){
-			System.err.println("Usage money.OfxConverter infile outfile");
+			System.err.println("Usage money.OfxConverter type infile outfile");
+			System.err.println("       type = \"\" ufj gold aeon view jcb");
 			System.exit(1);
 		}
 		String type = arg[0];
