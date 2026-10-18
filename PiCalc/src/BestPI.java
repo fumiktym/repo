@@ -48,7 +48,7 @@ public class BestPI
 		double absoluteCloseness = 1000;
 		String absolutePrecision = "";
 
-		System.out.println("//mod - Find closest fraction to Java's PI using denominator and numerator 1 to "+ denom+ "//");
+		System.out.println("//update & mod - Find closest fraction to Java's PI using denominator and numerator 1 to "+ denom+ "//");
 		for(int b1 = 1; b1 < denom; b1++)
 		{
 			for(int p1 = 1; p1 < num; p1++)
